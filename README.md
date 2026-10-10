@@ -12,9 +12,34 @@ eux, soumet les constats importants à une **vérification contradictoire**, che
 > C'est une aide à l'analyse. Elle ne remplace ni un professionnel qualifié, ni une note de calcul,
 > ni un contrôle réglementaire. Chaque constat affiche son statut de vérification.
 
-## Installation (espace personnel, pour tous vos projets)
+## Installation en plugin (recommandé)
 
 Prérequis : Claude Code 2.1 ou plus récent avec les workflows dynamiques autorisés, Python 3.9+.
+
+Dans Claude Code (terminal, application de bureau ou IDE), en une ligne :
+
+```
+/plugin install btp --marketplace niswbrrr/workflow-BTP
+```
+
+Ou depuis l'interface : `/plugin` → onglet **Marketplaces** → ajouter `niswbrrr/workflow-BTP`,
+puis onglet **Discover** → plugin **btp** → installer. Redémarrez la session si la commande
+n'apparaît pas tout de suite.
+
+La commande devient alors, dans n'importe quel projet :
+
+```
+/btp:audit-dossier-btp "<chemin du dossier>" mode=standard
+```
+
+Le plugin contient le workflow, les outils Python et le contrat de données ; le workflow retrouve
+seul ses outils dans le dossier d'installation des plugins. Mise à jour : `/plugin` → Marketplaces
+→ mettre à jour `workflow-btp`, ou `claude plugin update btp@workflow-btp`.
+
+> Tant que la pull request n'est pas fusionnée dans `main`, ajoutez la marketplace sur sa branche :
+> `/plugin marketplace add niswbrrr/workflow-BTP#claude/admiring-keller-43am29`.
+
+## Installation sans plugin (copie dans l'espace personnel)
 
 ```bash
 git clone https://github.com/niswbrrr/workflow-BTP.git
@@ -31,8 +56,9 @@ python install.py                 # copie dans ~/.claude (ou $CLAUDE_CONFIG_DIR)
   dégradé et le dit dans ses limites (texte des PDF non extrait, citations PDF non vérifiables).
 - Vérifier une installation : `python install.py --verifier`.
 
-Le dépôt contient aussi `.claude/workflows/audit-dossier-btp.js` : dans une session ouverte sur ce
-dépôt (y compris Claude Code sur le web), la commande est disponible sans installation.
+Cette méthode donne la commande courte `/audit-dossier-btp`. Le dépôt contient aussi
+`.claude/workflows/audit-dossier-btp.js` : dans une session ouverte sur ce dépôt (y compris Claude
+Code sur le web), la commande est disponible sans installation.
 
 ## Utilisation
 
@@ -132,6 +158,7 @@ globale modifiée sans l'option explicite `--activer-workflows`.
 ## Structure du dépôt
 
 ```
+.claude-plugin/                          manifestes du plugin « btp » et de la marketplace « workflow-btp »
 .claude/workflows/audit-dossier-btp.js   le workflow (orchestrateur, chartes, protocole)
 audit-dossier-btp/tools/                 outils déterministes Python (bibliothèque standard d'abord)
 audit-dossier-btp/schemas/               contrat de données (JSON Schema)

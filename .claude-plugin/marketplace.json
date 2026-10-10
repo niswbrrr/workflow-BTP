@@ -1,0 +1,19 @@
+{
+  "name": "workflow-btp",
+  "owner": {
+    "name": "niswbrrr"
+  },
+  "metadata": {
+    "description": "Outils Claude Code pour l'économie de la construction et l'analyse de dossiers BTP"
+  },
+  "plugins": [
+    {
+      "name": "btp",
+      "source": "./",
+      "description": "Audit multi-agents de dossiers de construction : constats tracés, échanges entre spécialistes, vérification contradictoire, livrables vérifiés.",
+      "version": "1.0.0",
+      "category": "productivity",
+      "keywords": ["btp", "construction", "dpgf", "cctp", "audit"]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "btp",
+  "version": "1.0.0",
+  "description": "Audit multi-agents de dossiers de construction (CCTP, DPGF/DQE, métrés, plans, IFC) : constats tracés jusqu'aux pièces, échanges entre spécialistes, vérification contradictoire et livrables (rapport, registre CSV/Excel, questions à arbitrer). Commande : /btp:audit-dossier-btp <dossier> [mode=rapide|standard|approfondi]",
+  "author": {
+    "name": "niswbrrr"
+  },
+  "homepage": "https://github.com/niswbrrr/workflow-BTP",
+  "repository": "https://github.com/niswbrrr/workflow-BTP",
+  "keywords": ["btp", "construction", "economie-de-la-construction", "dpgf", "cctp", "metre", "audit", "workflow"],
+  "workflows": ["./.claude/workflows/audit-dossier-btp.js"]
+}

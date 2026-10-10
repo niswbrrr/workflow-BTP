@@ -647,6 +647,7 @@ const pf = await appel('outil:environnement', PH.env, [
   "Tu es l'opérateur des outils déterministes du workflow audit-dossier-btp. Tu ne fais aucune analyse métier et tu n'inventes aucun résultat.",
   "1. Détermine une commande Python 3.9+ utilisable dans Bash : essaie dans l'ordre python3, python, py -3 (commande --version). Retiens la première qui fonctionne, telle qu'elle doit être tapée (avec guillemets si le chemin contient des espaces).",
   `2. Localise le dossier d'outils : premier candidat existant contenant preflight.py, parmi : ${candidatsOutils.join(' ; ')}. Donne son chemin ABSOLU (développe ~ et les variables d'environnement avec Bash).`,
+  `   Si aucun ne convient (installation par plugin), exécute : find "\${CLAUDE_CONFIG_DIR:-$HOME/.claude}/plugins" -type f -path '*audit-dossier-btp/tools/preflight.py' -exec ls -t {} + 2>/dev/null | head -1 — le dossier d'outils est le répertoire du fichier trouvé.`,
   `3. Exécute : <python> "<outils>/preflight.py" --source ${q(ARGS.dossier)} --mode ${ARGS.mode}${ARGS.sortie ? ' --sortie ' + q(ARGS.sortie) : ''}`,
   '   Recopie dans preflight l\'objet JSON imprimé, tel quel.',
   '4. Seulement si preflight.statut vaut "ok" : exécute <python> "<outils>/inventaire.py" --source "<preflight.source.chemin>" --travail "<preflight.travail>" et recopie l\'objet JSON imprimé dans inventaire (sinon inventaire = {}).',
@@ -658,7 +659,7 @@ if (!pf || pf.statut === 'echec' || !pf.preflight || pf.preflight.statut !== 'ok
   return {
     statut: 'interrompu', phase: PH.env,
     motif: (pf && ((pf.erreurs || []).join(' ; ') || (pf.preflight && pf.preflight.erreur))) || "vérification de l'environnement impossible",
-    aide: "Vérifiez le chemin du dossier, que Python 3.9+ est installé, et que les outils sont présents (installation : python install.py depuis le dépôt workflow-BTP, qui copie le workflow dans ~/.claude/workflows et les outils dans ~/.claude/audit-dossier-btp/). Vous pouvez aussi passer outils=<chemin>.",
+    aide: "Vérifiez le chemin du dossier, que Python 3.9+ est installé, et que les outils sont présents : plugin « btp » (/plugin install btp --marketplace niswbrrr/workflow-BTP) ou python install.py depuis le dépôt workflow-BTP. Vous pouvez aussi passer outils=<chemin>.",
     agents: ETAT.agents,
   }
 }
