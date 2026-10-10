@@ -1,0 +1,497 @@
+{
+  "$id": "reponses",
+  "type": "object",
+  "required": [
+    "agent",
+    "round",
+    "reponses"
+  ],
+  "properties": {
+    "agent": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "round": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "reponses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "transmission_id",
+          "verdict",
+          "justification"
+        ],
+        "properties": {
+          "transmission_id": {
+            "type": "string"
+          },
+          "constat_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "confirme",
+              "refute",
+              "nuance",
+              "non_resolu"
+            ]
+          },
+          "justification": {
+            "type": "string",
+            "minLength": 15
+          },
+          "elements_nouveaux": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "doc_id"
+              ],
+              "properties": {
+                "doc_id": {
+                  "type": "string",
+                  "pattern": "^(D\\d{3,4}|EXT)$"
+                },
+                "page": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "page_pdf": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "localisation": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "citation": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 400
+                },
+                "indice": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "date_consultation": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "constats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "finding_id",
+          "title",
+          "discipline",
+          "lot",
+          "finding_type",
+          "severity",
+          "severity_rationale",
+          "priority",
+          "confidence",
+          "confidence_rationale",
+          "claim",
+          "evidence",
+          "sources",
+          "recommended_action"
+        ],
+        "properties": {
+          "finding_id": {
+            "type": "string",
+            "pattern": "^[A-Z]{2,5}-\\d{3}(-[a-z0-9]+)?$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 160
+          },
+          "discipline": {
+            "type": "string",
+            "minLength": 2
+          },
+          "lot": {
+            "type": "string"
+          },
+          "finding_type": {
+            "type": "string",
+            "enum": [
+              "anomalie_averee",
+              "incoherence",
+              "omission_possible",
+              "risque",
+              "hypothese",
+              "question_ouverte"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "critique",
+              "majeure",
+              "moderee",
+              "mineure"
+            ]
+          },
+          "severity_criteria": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "securite",
+                "economique",
+                "conformite",
+                "blocage_chantier",
+                "reprise_demolition",
+                "interfaces",
+                "contractuel",
+                "documentaire"
+              ]
+            }
+          },
+          "severity_rationale": {
+            "type": "string",
+            "minLength": 10
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          },
+          "decision_deadline": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "elevee",
+              "moyenne",
+              "faible"
+            ]
+          },
+          "confidence_rationale": {
+            "type": "string",
+            "minLength": 10
+          },
+          "claim": {
+            "type": "string",
+            "minLength": 15
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "fait",
+                "nature"
+              ],
+              "properties": {
+                "fait": {
+                  "type": "string",
+                  "minLength": 5
+                },
+                "nature": {
+                  "type": "string",
+                  "enum": [
+                    "fait_observe",
+                    "exigence_ecrite",
+                    "calcul",
+                    "interpretation",
+                    "hypothese"
+                  ]
+                }
+              }
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "doc_id"
+              ],
+              "properties": {
+                "doc_id": {
+                  "type": "string",
+                  "pattern": "^(D\\d{3,4}|EXT)$"
+                },
+                "page": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "page_pdf": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "localisation": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "citation": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 400
+                },
+                "indice": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "date_consultation": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "calculation": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "formule": {
+                "type": "string"
+              },
+              "variables": {
+                "type": "object"
+              },
+              "resultat": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "unite": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "outil": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "controle_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "economic_impact": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "quantifie": {
+                "type": "boolean"
+              },
+              "montant_ht": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "base": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "commentaire": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "technical_impact": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "counterarguments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recommended_action": {
+            "type": "string",
+            "minLength": 5
+          },
+          "responsible_party": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "open_questions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "corrections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "finding_id",
+          "champs",
+          "motif"
+        ],
+        "properties": {
+          "finding_id": {
+            "type": "string"
+          },
+          "champs": {
+            "type": "object"
+          },
+          "motif": {
+            "type": "string",
+            "minLength": 10
+          }
+        }
+      }
+    },
+    "retraits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "finding_id",
+          "motif"
+        ],
+        "properties": {
+          "finding_id": {
+            "type": "string"
+          },
+          "motif": {
+            "type": "string",
+            "minLength": 10
+          }
+        }
+      }
+    },
+    "transmissions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "destinataire",
+          "question"
+        ],
+        "properties": {
+          "destinataire": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "constat_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "question": {
+            "type": "string",
+            "minLength": 15
+          },
+          "raison": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "limites": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

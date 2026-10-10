@@ -1,0 +1,114 @@
+{
+  "$id": "verification",
+  "type": "object",
+  "required": [
+    "constat_id",
+    "lentille",
+    "verdict",
+    "justification"
+  ],
+  "properties": {
+    "constat_id": {
+      "type": "string"
+    },
+    "lentille": {
+      "type": "string",
+      "enum": [
+        "provenance",
+        "calcul",
+        "interpretation"
+      ]
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "confirme",
+        "refute",
+        "insuffisant",
+        "reformuler"
+      ]
+    },
+    "justification": {
+      "type": "string",
+      "minLength": 20
+    },
+    "elements_nouveaux": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "doc_id"
+        ],
+        "properties": {
+          "doc_id": {
+            "type": "string",
+            "pattern": "^(D\\d{3,4}|EXT)$"
+          },
+          "page": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "page_pdf": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "localisation": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "citation": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 400
+          },
+          "indice": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "date_consultation": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "correction_proposee": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "confiance": {
+      "type": "string",
+      "enum": [
+        "elevee",
+        "moyenne",
+        "faible"
+      ]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+node_modules/
+tests/node_modules/
+livrables_audit*/
+*.tmp

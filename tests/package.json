@@ -1,0 +1,10 @@
+{
+  "name": "audit-dossier-btp-tests",
+  "private": true,
+  "description": "Dépendances des tests JavaScript (validateur et runtime simulé du workflow)",
+  "type": "module",
+  "devDependencies": {
+    "acorn": "^8.11.0",
+    "ajv": "^6.12.6"
+  }
+}

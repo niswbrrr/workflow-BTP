@@ -1,0 +1,138 @@
+{
+  "$id": "arbitrage",
+  "type": "object",
+  "required": [
+    "constat_id",
+    "decision",
+    "motif",
+    "positions"
+  ],
+  "properties": {
+    "constat_id": {
+      "type": "string"
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "maintenu",
+        "rejete",
+        "requalifie",
+        "desaccord_persistant"
+      ]
+    },
+    "motif": {
+      "type": "string",
+      "minLength": 20
+    },
+    "elements_decisifs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "doc_id"
+        ],
+        "properties": {
+          "doc_id": {
+            "type": "string",
+            "pattern": "^(D\\d{3,4}|EXT)$"
+          },
+          "page": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "page_pdf": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "localisation": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "citation": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 400
+          },
+          "indice": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "date_consultation": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "nouveau_type": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        null,
+        "anomalie_averee",
+        "incoherence",
+        "omission_possible",
+        "risque",
+        "hypothese",
+        "question_ouverte"
+      ]
+    },
+    "positions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "acteur",
+          "position"
+        ],
+        "properties": {
+          "acteur": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "argument": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "questions_pour_moe": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

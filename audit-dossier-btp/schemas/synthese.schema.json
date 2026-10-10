@@ -1,0 +1,75 @@
+{
+  "$id": "synthese",
+  "type": "object",
+  "required": [
+    "appreciation_globale",
+    "messages_cles",
+    "decisions_prioritaires"
+  ],
+  "properties": {
+    "appreciation_globale": {
+      "type": "string",
+      "minLength": 30
+    },
+    "messages_cles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "texte",
+          "constats"
+        ],
+        "properties": {
+          "texte": {
+            "type": "string"
+          },
+          "constats": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "decisions_prioritaires": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "decision",
+          "constats"
+        ],
+        "properties": {
+          "decision": {
+            "type": "string"
+          },
+          "constats": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "acteur": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "echeance": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "avertissements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

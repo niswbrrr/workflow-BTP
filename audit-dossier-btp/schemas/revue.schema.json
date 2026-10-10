@@ -1,0 +1,57 @@
+{
+  "$id": "revue",
+  "type": "object",
+  "required": [
+    "verdict",
+    "problemes"
+  ],
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "conforme",
+        "corrections_requises"
+      ]
+    },
+    "problemes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "fichier",
+          "type",
+          "description",
+          "bloquant"
+        ],
+        "properties": {
+          "fichier": {
+            "type": "string"
+          },
+          "localisation": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "surenonciation",
+              "reference_invalide",
+              "incoherence",
+              "lisibilite",
+              "manque",
+              "autre"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "bloquant": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

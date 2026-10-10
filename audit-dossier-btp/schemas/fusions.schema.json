@@ -1,0 +1,46 @@
+{
+  "$id": "fusions",
+  "type": "object",
+  "required": [
+    "decisions"
+  ],
+  "properties": {
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "ids",
+          "decision",
+          "motif"
+        ],
+        "properties": {
+          "ids": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "string"
+            }
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "fusionner",
+              "distincts"
+            ]
+          },
+          "motif": {
+            "type": "string",
+            "minLength": 10
+          },
+          "id_retenu": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

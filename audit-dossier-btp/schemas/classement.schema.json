@@ -1,0 +1,111 @@
+{
+  "$id": "classement",
+  "type": "object",
+  "required": [
+    "documents",
+    "disciplines_presentes",
+    "dossier_exploitable"
+  ],
+  "properties": {
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "doc_id",
+          "type_piece",
+          "disciplines",
+          "statut_exploitation"
+        ],
+        "properties": {
+          "doc_id": {
+            "type": "string",
+            "pattern": "^D\\d{3,4}$"
+          },
+          "type_piece": {
+            "type": "string"
+          },
+          "intitule": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "lots": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "disciplines": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "indice": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "date_document": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "emetteur": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "statut_exploitation": {
+            "type": "string",
+            "enum": [
+              "exploitable",
+              "partiellement_exploitable",
+              "non_exploitable",
+              "doublon",
+              "version_remplacee_probable"
+            ]
+          },
+          "remarque": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "disciplines_presentes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dossier_exploitable": {
+      "type": "boolean"
+    },
+    "versions_concurrentes": {
+      "type": "array"
+    },
+    "documents_manquants": {
+      "type": "array"
+    },
+    "hierarchie_documentaire": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "sujets_hors_chartes": {
+      "type": "array"
+    },
+    "questions_cadrage": {
+      "type": "array"
+    }
+  }
+}
