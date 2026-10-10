@@ -1124,6 +1124,8 @@ async function produireLivrables(label) {
     { etape: 'controle_qualite', commande: cmd('controle_qualite.py', `--travail ${q(CTX.travail)}`) },
   ], `AVANT les étapes : écris EXACTEMENT le contenu JSON suivant (sans rien modifier, ajouter ni retirer) dans le fichier ${cheminTravail('etat_execution.json')} avec l'outil Write :\n${etatJson}`)
 }
+// le rédacteur doit lire les statuts APRÈS vérification, arbitrage et complétude
+await outil('registre-final', PH.livr, [etapeBuild()])
 const red = await appel('redaction', PH.livr, promptRedaction(null), { schema: REDACTION_SCHEMA })
 if (!red || red.validation !== 'ok') limite('synthèse rédigée indisponible : le rapport présente directement les sections issues du registre')
 let L = await produireLivrables('livrables')

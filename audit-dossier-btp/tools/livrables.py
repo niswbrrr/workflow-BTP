@@ -39,6 +39,27 @@ CSV_COLS = ["finding_id", "title", "discipline", "lot", "finding_type", "finding
             "echanges", "verifications", "arbitrage", "quality_flags", "phase_origine"]
 
 
+ROLES = [  # premier motif trouvé dans l'acteur cité -> rôle canonique
+    (("structure",), "Bureau d'études structure"),
+    (("fluide", "cvc", "plomberie", "electric", "électric"), "Bureaux d'études et lots techniques"),
+    (("econom", "économ", "metreur", "métreur"), "Économiste / métreur"),
+    (("cctp", "redacteur", "rédacteur"), "Rédacteur des pièces écrites"),
+    (("opc", "planning", "ordonnancement"), "OPC"),
+    (("maitre d'ouvrage", "maître d'ouvrage", "maitrise d'ouvrage", "maîtrise d'ouvrage", "moa"), "Maître d'ouvrage"),
+    (("entreprise", "titulaire"), "Entreprises"),
+    (("architecte", "moe", "maitrise d'oeuvre", "maîtrise d'œuvre", "maîtrise d'oeuvre", "maitre d'oeuvre", "maître d'oeuvre"),
+     "Architecte / maîtrise d'œuvre"),
+]
+
+
+def role(acteur):
+    a = (acteur or "").lower()
+    for motifs, nom in ROLES:
+        if any(m in a for m in motifs):
+            return nom
+    return acteur or "Maîtrise d'œuvre (à préciser)"
+
+
 def eur(n):
     """Montant pour lecture humaine : « 1 045,00 € » (espace fine insécable pour les milliers)."""
     if n is None:
@@ -272,14 +293,14 @@ def main() -> int:
         if f["status"] == "refute":
             continue
         for q in f.get("open_questions", []) or []:
-            q_by[f.get("responsible_party") or "Maîtrise d'œuvre (à préciser)"].append((q, f))
+            q_by[role(f.get("responsible_party"))].append((q, f))
         arb = f.get("arbitrage") or {}
         for q in arb.get("questions_pour_moe", []) or []:
-            q_by["Maîtrise d'œuvre (arbitrage)"].append((q, f))
+            q_by["Architecte / maîtrise d'œuvre"].append((q, f))
         if f["status"] in ("non_resolu", "conteste") and not f.get("open_questions") and not arb.get("questions_pour_moe"):
             doutes = [v["justification"] for v in f.get("verifications", []) if v["verdict"] in ("insuffisant", "refute")]
             q = f"Confirmer ou infirmer : {f['claim']}" + (f" (point non établi : {doutes[0]})" if doutes else "")
-            q_by[f.get("responsible_party") or "Maîtrise d'œuvre (à préciser)"].append((q, f))
+            q_by[role(f.get("responsible_party"))].append((q, f))
     ql = ["# Questions et arbitrages à obtenir", "",
           "Chaque question est rattachée au constat qui la motive. Une réponse est nécessaire pour lever "
           "l'incertitude indiquée ; tant qu'elle manque, le constat reste au statut affiché.", ""]
@@ -295,6 +316,7 @@ def main() -> int:
                    f"- **Constat** : {f['finding_id']} — {f['title']} ({TYPE_FR[f['finding_type']]}, "
                    f"{SEV_FR[f['severity']]}, {f['priority']}, statut {STATUS_FR[f['status']].lower()})",
                    f"- **Contexte** : {f['claim']}",
+                   f"- **Acteur cité par l'agent** : {f.get('responsible_party') or 'non précisé'}",
                    f"- **Pièces concernées** : {srcs}",
                    f"- **Pourquoi une réponse est nécessaire** : {f.get('severity_rationale')}"
                    + (f" — échéance : {f['decision_deadline']}" if f.get("decision_deadline") else ""), ""]

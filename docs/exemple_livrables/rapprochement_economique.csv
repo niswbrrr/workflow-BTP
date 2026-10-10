@@ -1,0 +1,6 @@
+﻿type_controle;controle_id;statut;doc_a;ref_a;designation_a;unite_a;quantite_a;doc_b;ref_b;designation_b;unite_b;quantite_b;ecart_abs;ecart_rel_pct;montant_declare;montant_recalcule;ecart_montant;valorisation_indicative_ht;commentaire;constats_lies
+rapprochement_quantites;RAPP-D007-D006-001;concordant;D007;3.1;Échafaudage de façade;m2;450,000;D006;3.1;Échafaudage de façade;m2;450,000;0,000;0,00;;;;;;
+rapprochement_quantites;RAPP-D007-D006-002;ecart;D007;3.2;Enduit monocouche gratté sur façades;m2;412,500;D006;3.2;Enduit monocouche gratté sur façades;m2;385,000;27,500;6,67;;;;1045,00;écart × PU de dpgf (38.0);ECO-002
+rapprochement_quantites;RAPP-D007-D006-003;concordant;D007;3.4;Appuis de fenêtres béton préfabriqués;u;12,000;D006;3.4;Appuis de fenêtres béton préfabriqués;u;12,000;0,000;0,00;;;;;;
+rapprochement_quantites;RAPP-D007-D006-004;absent_de_metre;;;;;;D006;3.3;Protection des menuiseries extérieures;ens;1,000;;;;;;;aucune ligne correspondante trouvée;
+controle_arith;DPGF-D005-F1-L8-ARITH;anomalie_detectee;D005;2.4;Dallage sur terre-plein ép. 12 cm;;120,000;;;;;;;;5040,00;5400,00;-360,00;;quantité × PU ≠ montant déclaré (feuille DPGF Lot 02, ligne 8);ECO-001

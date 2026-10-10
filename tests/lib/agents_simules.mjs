@@ -166,7 +166,15 @@ export function creerAgents(scenario, options = {}) {
   const redaction = ({ prompt, label }) => {
     const v = validation(prompt)
     etat.redactions++
-    const reg = lire(path.join(v.travail, 'registre.json'))
+    // non-régression (bug vu en essai réel) : le registre lu doit intégrer toutes les vérifications
+    const regPath = path.join(v.travail, 'registre.json')
+    const dateReg = fs.statSync(regPath).mtimeMs
+    for (const sous of ['verification', 'arbitrage', 'constats']) {
+      for (const fic of fs.readdirSync(path.join(v.travail, sous))) {
+        if (fs.statSync(path.join(v.travail, sous, fic)).mtimeMs > dateReg) throw new Error(`registre périmé : ${sous}/${fic} est postérieur au registre lu par le rédacteur`)
+      }
+    }
+    const reg = lire(regPath)
     const etablis = reg.constats.filter((c) => c.status === 'corrobore')
     const ouverts = reg.constats.filter((c) => ['conteste', 'non_resolu'].includes(c.status))
     const refute = reg.constats.find((c) => c.status === 'refute')

@@ -63,6 +63,10 @@ alors son périmètre en conséquence et le déclare dans les limites du rapport
 | standard | 8 au plus | 3 / 2 / 1 si P1 ou chiffré | 1 | 1 passe | 40-60 agents |
 | approfondi | 12 au plus | 3 / 3 / 2 | 2 | 2 passes | 60-120 agents |
 
+Mesure réelle (dossier d'essai de 12 pièces, mode rapide) : 33 agents, 15 minutes, environ 5 $ de
+consommation. La durée dépend du nombre de cœurs : le moteur fait travailler au plus
+min(16, cœurs − 2) agents à la fois (2 seulement sur un poste à 4 cœurs).
+
 ### Livrables (`livrables_audit/`)
 
 | Fichier | Contenu |
@@ -100,7 +104,8 @@ ou preuve insuffisante) · **réfuté**. Seuls les constats corroborés figurent
 10. **Contrôle final** — porte qualité automatique (12 contrôles) et revue, correction bornée.
 
 Détails, justification des choix et règles de statut : [docs/CONCEPTION.md](docs/CONCEPTION.md).
-Résultats des essais : [docs/ESSAIS.md](docs/ESSAIS.md).
+Résultats des essais : [docs/ESSAIS.md](docs/ESSAIS.md). Exemple de livrables réels :
+[docs/exemple_livrables/](docs/exemple_livrables/).
 
 ## Tests
 
@@ -110,6 +115,7 @@ npm install --prefix tests                            # une fois : acorn et ajv 
 node tests/valider_workflow.mjs                        # validation statique selon les règles du moteur
 node tests/test_e2e_simule.mjs                         # bout en bout simulé : vrai script, vrais outils, agents scriptés
 python3 tests/fabriquer_dossier_test.py                # régénère le dossier d'essai (reportlab, openpyxl, python-docx)
+tests/lancer_essai_reel.sh rapide                      # essai RÉEL avec de vrais agents (consomme des jetons, ≈ 5 $)
 ```
 
 Le dossier `tests/dossier_test/` est un projet **entièrement fictif** qui contient des pièges
