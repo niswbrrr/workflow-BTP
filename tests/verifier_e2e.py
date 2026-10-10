@@ -48,8 +48,12 @@ ok(remap.get("ENV-001") == "MET-001" and remap.get("ECO-002") == "MET-001",
    "S5 doublons : ENV-001 (juge) et ECO-002 (même contrôle) fusionnés dans MET-001")
 ok(f["status"] == "corrobore" and {"metres", "enveloppe", "economie"} <= set(f["origin_agents"]),
    "S1 écart de quantité : MET-001 corroboré, détecté par 3 agents")
-ok(any(e["a"] == "economie" and e["independant"] is False for e in f.get("echanges", [])),
-   "une confirmation par un agent co-auteur n'est pas comptée comme indépendante")
+a_traiter = json.loads((w / "echanges" / "r1" / "a_traiter.json").read_text(encoding="utf-8"))
+ok(any(e.get("destinataire") == "economie" and "co-auteur" in e["motif"] for e in a_traiter["ecartees"])
+   and not any(e["a"] == "economie" for e in f.get("echanges", [])),
+   "la question adressée à un co-auteur du constat fusionné n'est pas routée (réponse non indépendante)")
+ok("Questions internes non traitées" in questions and "co-auteur" in questions,
+   "les questions non routées restent visibles dans questions_a_arbitrer.md")
 f = c("CCT-002")
 ok(f["finding_type"] == "question_ouverte" and "détail D12" in questions,
    "S3 information manquante : CCT-002 reste une question ouverte, posée dans questions_a_arbitrer.md")

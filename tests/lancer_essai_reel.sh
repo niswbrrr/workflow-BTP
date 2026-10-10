@@ -11,7 +11,9 @@ cp "$RACINE/.claude/workflows/audit-dossier-btp.js" "$TRAVAIL/.claude/workflows/
 cd "$TRAVAIL"
 [ -d .git ] || git init -q .
 echo "Essai réel en mode $MODE dans $TRAVAIL (journal : $TRAVAIL/log.jsonl)"
-CLAUDE_CODE_WORKFLOWS=1 claude -p "/audit-dossier-btp $RACINE/tests/dossier_test mode=$MODE outils=$RACINE/audit-dossier-btp/tools" \
+# En mode non interactif, Claude Code arrête les tâches d'arrière-plan 10 min après le dernier tour :
+# CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0 lui demande d'attendre la fin du workflow.
+CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0 CLAUDE_CODE_WORKFLOWS=1 claude -p "/audit-dossier-btp $RACINE/tests/dossier_test mode=$MODE outils=$RACINE/audit-dossier-btp/tools" \
   --add-dir "$RACINE" --permission-mode acceptEdits \
   --allowedTools "Workflow" "Bash" "Read" "Write" "Edit" "Grep" "Glob" \
   --settings '{"enableWorkflows":true}' --output-format stream-json --verbose < /dev/null > "$TRAVAIL/log.jsonl"

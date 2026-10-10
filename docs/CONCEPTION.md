@@ -78,7 +78,7 @@ dans tous les prompts.
 | Proposition initiale | Problème | Solution retenue | Bénéfice |
 |---|---|---|---|
 | Un agent coordinateur central qui supervise tout | Un agent n'existe que le temps d'une tâche ; il ne peut ni lancer ni attendre d'autres agents | Le **script** est le coordinateur (ordre, parallélisme, routage, relances, arbitrages déclenchés par règle) ; le jugement est confié à des agents ponctuels | Contrôle déterministe, rejouable, sans « coordinateur » qui résume à sa façon |
-| Agents qui se parlent | Aucune primitive de messagerie | Protocole par fichiers : `transmissions` → routage par `registre.py` (doublons, destinataires inactifs, plafonds journalisés) → `echanges/rN/<agent>.json` → statuts recalculés | Échanges réels et traçables, jamais un dialogue simulé |
+| Agents qui se parlent | Aucune primitive de messagerie | Protocole par fichiers : `transmissions` → routage par `registre.py` (doublons, destinataires inactifs, questions voisines sur un même constat regroupées, questions à un co-auteur du constat écartées, plafonds journalisés) → `echanges/rN/<agent>.json` → statuts recalculés | Échanges réels et traçables, jamais un dialogue simulé ; le quota de questions sert aux réponses indépendantes |
 | Un agent DPGF qui vérifie les calculs | Un modèle peut se tromper en arithmétique | `dpgf_check.py` et `rapprochement.py` calculent ; l'agent interprète (forfaits, lignes à chiffrer par les entreprises) | Erreurs arithmétiques prouvées, non estimées |
 | Statuts attribués par les agents | Un agent peut se déclarer « corroboré » | Les statuts sont **calculés** par `registre.py` à partir des verdicts, des échanges, des contrôles et des arbitrages | Pas d'auto-validation |
 | Vérification par un agent sceptique | Un seul relecteur a un angle mort | Vérificateurs à **lentilles distinctes** (provenance, calcul, interprétation), nombre selon gravité et mode ; une réfutation par un seul pair est elle-même contrôlée | Diversité des angles d'attaque |
@@ -137,6 +137,8 @@ Pas de note unique : la gravité, la priorité et la confiance restent séparée
 ## 6. Coûts, échecs et reprise
 
 - Modes : `rapide` (≈ 20-30 agents), `standard` (≈ 40-60), `approfondi` (≈ 60-120) selon le dossier.
+- Durée : le moteur exécute au plus min(16, nombre de cœurs − 2) agents à la fois ; sur un poste à
+  4 cœurs, seulement 2 agents travaillent simultanément.
 - Relance unique d'un spécialiste sans résultat ou à fichier non validé ; réparation unique d'un
   fichier rejeté par le registre ; divergences entre l'index annoncé et le fichier écrit journalisées.
 - Budget (si l'utilisateur fixe une cible « +500k ») : réserve pour la rédaction et les livrables,

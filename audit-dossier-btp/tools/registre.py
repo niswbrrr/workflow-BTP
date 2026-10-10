@@ -105,10 +105,21 @@ def safe_eval(expr: str, variables: dict):
         if isinstance(node, ast.Name) and node.id in variables:
             return variables[node.id]
         raise ValueError(f"élément non autorisé : {ast.dump(node)[:60]}")
-    expr = expr.replace("×", "*").replace("÷", "/").replace(",", ".")
-    if "=" in expr:
-        expr = expr.split("=")[0]
-    return ev(ast.parse(expr.strip(), mode="eval"))
+    return ev(ast.parse(normaliser_formule(expr), mode="eval"))
+
+
+def normaliser_formule(expr: str) -> str:
+    """Accepte les écritures usuelles : « 2x24 », « S x e », « × », « ÷ », « − », virgule décimale."""
+    e = expr.replace("×", "*").replace("÷", "/").replace("−", "-").replace("–", "-")
+    e = re.sub(r"(?<=\d),(?=\d)", ".", e)
+    e = re.sub(r"\s[xX]\s", " * ", e)
+    e = re.sub(r"(?<=[\d)])\s*[xX]\s*(?=[\d(])", "*", e)
+    return e.strip()
+
+
+def membres_formule(expr: str):
+    """« a = b = c » -> [a, b, c] ; chaque membre est évalué séparément."""
+    return [m for m in (x.strip() for x in str(expr).split("=")) if m]
 
 
 def numeric_vars(variables):
@@ -182,11 +193,16 @@ def check_calc(f, ctx):
             return "controle_verifie", []
         return "controle_incoherent", ["calcul_incoherent_avec_outil"]
     if calc.get("formule") and res is not None:
-        try:
-            val = safe_eval(calc["formule"], numeric_vars(calc.get("variables")))
-        except Exception:
+        variables = numeric_vars(calc.get("variables"))
+        valeurs = []
+        for membre in membres_formule(calc["formule"]):
+            try:
+                valeurs.append(safe_eval(membre, variables))
+            except Exception:
+                continue
+        if not valeurs:
             return "non_recalculable", ["formule_non_recalculable"]
-        if abs(val - res) <= max(0.01, 0.005 * abs(res)):
+        if any(abs(v - res) <= max(0.01, 0.005 * abs(res)) for v in valeurs):
             return "recalcule_ok", []
         return "recalcule_ko", ["calcul_faux"]
     return "non_recalculable", []
@@ -560,6 +576,11 @@ def build(work: Path):
     for t in transmissions:
         t["constat_id_registre"] = remap.get(t.get("constat_id"), t.get("constat_id"))
     tindex = {t["transmission_id"]: t for t in transmissions}
+    regroupees = {}
+    for p in sorted((work / "echanges").glob("r*/a_traiter.json")):
+        for items in (load_json(p, {}) or {}).get("par_destinataire", {}).values():
+            for it in items:
+                regroupees[it["transmission_id"]] = it.get("transmissions_regroupees", [])
     for resp in responses:
         agent = resp["agent"]
         for r in resp.get("reponses", []):
@@ -567,6 +588,10 @@ def build(work: Path):
             target = remap.get(r.get("constat_id") or (t or {}).get("constat_id"))
             if t is not None:
                 t["reponse"] = {"verdict": r["verdict"], "par": agent, "fichier": resp["_fichier"]}
+            for autre in regroupees.get(r["transmission_id"], []):
+                if autre in tindex:
+                    tindex[autre]["reponse"] = {"verdict": r["verdict"], "par": agent, "fichier": resp["_fichier"],
+                                                "regroupee_avec": r["transmission_id"]}
             if target in index:
                 f = index[target]
                 f.setdefault("echanges", []).append({
@@ -764,7 +789,7 @@ def cmd_transmissions(a):
     index = {f["finding_id"]: f for f in reg["constats"]}
     todo = [t for t in reg["transmissions"] if t["round"] == a.round]
     seen = set()
-    groups = defaultdict(list)
+    groupes = {}          # (destinataire, constat) -> liste de transmissions regroupées
     ecartees = []
     for t in todo:
         key = (t["destinataire"], t.get("constat_id_registre"), norm_text(t["question"])[:80])
@@ -783,21 +808,36 @@ def cmd_transmissions(a):
         if f is not None and f["status"] == "refute":
             ecartees.append({"transmission_id": t["transmission_id"], "motif": "constat déjà réfuté"})
             continue
-        groups[t["destinataire"]].append((t, f))
+        if f is not None and t["destinataire"] in f.get("origin_agents", []):
+            # après fusion, le destinataire est co-auteur : sa réponse ne serait pas indépendante
+            ecartees.append({"transmission_id": t["transmission_id"], "destinataire": t["destinataire"],
+                             "motif": "destinataire déjà co-auteur du constat (après fusion)", "question": t["question"]})
+            continue
+        cle = (t["destinataire"], t.get("constat_id_registre") or t["transmission_id"])
+        groupes.setdefault(cle, []).append((t, f))
     out = {"round": a.round, "par_destinataire": {}, "ecartees": ecartees}
-    for dest, items in sorted(groups.items()):
-        items.sort(key=lambda tf: (SEV_ORDER.get((tf[1] or {}).get("severity"), 5),
-                                   PRIO_ORDER.get((tf[1] or {}).get("priority"), 5), tf[0]["transmission_id"]))
-        kept, dropped = items[:a.cap], items[a.cap:]
-        for t, _ in dropped:
-            ecartees.append({"transmission_id": t["transmission_id"], "motif": f"plafond de {a.cap} questions "
-                             f"par destinataire atteint", "destinataire": dest, "question": t["question"]})
-        out["par_destinataire"][dest] = [{
-            "transmission_id": t["transmission_id"], "de": t["de"], "constat_id": t.get("constat_id_registre"),
-            "question": t["question"], "raison": t.get("raison"),
-            "constat": None if f is None else {k: f.get(k) for k in ("title", "claim", "lot", "finding_type",
-                                                                      "severity", "status", "sources")}}
-            for t, f in kept]
+    par_dest = defaultdict(list)
+    for (dest, _), items in groupes.items():
+        par_dest[dest].append(items)
+    for dest, lots in sorted(par_dest.items()):
+        lots.sort(key=lambda it: (SEV_ORDER.get((it[0][1] or {}).get("severity"), 5),
+                                  PRIO_ORDER.get((it[0][1] or {}).get("priority"), 5), it[0][0]["transmission_id"]))
+        kept, dropped = lots[:a.cap], lots[a.cap:]
+        for items in dropped:
+            for t, _ in items:
+                ecartees.append({"transmission_id": t["transmission_id"], "motif": f"plafond de {a.cap} sujets "
+                                 f"par destinataire atteint", "destinataire": dest, "question": t["question"]})
+        out["par_destinataire"][dest] = []
+        for items in kept:
+            t, f = items[0]
+            out["par_destinataire"][dest].append({
+                "transmission_id": t["transmission_id"],
+                "transmissions_regroupees": [x["transmission_id"] for x, _ in items[1:]],
+                "de": ", ".join(dict.fromkeys(x["de"] for x, _ in items)), "constat_id": t.get("constat_id_registre"),
+                "question": " / ".join(dict.fromkeys(x["question"] for x, _ in items)),
+                "raison": t.get("raison"),
+                "constat": None if f is None else {k: f.get(k) for k in ("title", "claim", "lot", "finding_type",
+                                                                          "severity", "status", "sources")}})
     d = work / "echanges" / f"r{a.round}"
     d.mkdir(parents=True, exist_ok=True)
     save_json(d / "a_traiter.json", out)

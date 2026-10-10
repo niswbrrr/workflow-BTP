@@ -78,6 +78,16 @@ class Calculs(unittest.TestCase):
         with self.assertRaises(ValueError):
             registre.safe_eval("x.y", {"x": 1})
 
+    def test_formules_ecrites_par_des_agents_reels(self):
+        """Formules relevées dans l'essai réel : « x » multiplicatif, égalités en chaîne, membre incohérent."""
+        def etat(formule, variables, resultat):
+            return registre.check_calc({"calculation": {"formule": formule, "variables": variables, "resultat": resultat}}, None)[0]
+        self.assertEqual(etat("perimetre x hauteur = (2x24 + 2x10.5) x 6.5", {}, 448.5), "recalcule_ok")
+        self.assertEqual(etat("enduit = 448.5 - n_baies x 1.20 x 2.50", {"n_baies": {"valeur": 14}}, 406.5), "recalcule_ok")
+        self.assertEqual(etat("(e_cctp - e_coupe) x surface x pu", {"e_cctp": 0.2, "e_coupe": 0.18, "surface": 120, "pu": 285}, 684), "recalcule_ok")
+        self.assertEqual(etat("V = S x e", {"S": 120, "e_CCTP": 0.2}, 2.4), "non_recalculable")
+        self.assertEqual(etat("quantite * pu", {"quantite": 120, "pu": 45}, 5040), "recalcule_ko")
+
 
 class Statuts(unittest.TestCase):
     def base(self, **kw):

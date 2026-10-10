@@ -962,7 +962,8 @@ for (let tour = 1; tour <= M.tours; tour++) {
   const routage = T.sorties.transmissions || {}
   const parDest = routage.par_destinataire || {}
   const dests = Object.keys(parDest).filter((k) => (parDest[k] || []).length)
-  for (const e of (routage.ecartees || [])) if (e.motif && e.motif.startsWith('plafond')) log(`Question ${e.transmission_id} non routée (${e.motif}) : reportée dans questions_a_arbitrer.md`)
+  const nonRoutees = (routage.ecartees || []).filter((e) => e.motif && (e.motif.startsWith('plafond') || e.motif.includes('co-auteur')))
+  if (nonRoutees.length) log(`${nonRoutees.length} question(s) non routée(s) (plafond du mode ou destinataire co-auteur) : reportées dans questions_a_arbitrer.md`)
   if (!dests.length) { log(`Tour ${tour} : aucune question à router — fin des échanges`); break }
   log(`Tour ${tour} : ${dests.map((d) => `${d} (${parDest[d].length})`).join(', ')}`)
   const reponses = await parallel(dests.map((dest) => async () => {
@@ -974,7 +975,7 @@ for (let tour = 1; tour <= M.tours; tour++) {
       REGLES,
       charteTexte(dest, ch),
       'CONTEXTE\n' + enteteContexte(),
-      `QUESTIONS : ${cheminTravail(`echanges/r${tour}/a_traiter.json`)}, clé par_destinataire.${dest} (transmission_id, de, constat_id, question, résumé du constat). Registre complet : ${cheminTravail('registre.json')}. Tes constats initiaux éventuels : ${cheminTravail(`constats/${dest}.json`)}.`,
+      `QUESTIONS : ${cheminTravail(`echanges/r${tour}/a_traiter.json`)}, clé par_destinataire.${dest} (transmission_id, de, constat_id, question, résumé du constat). Plusieurs agents peuvent avoir posé des questions voisines sur le même constat : elles sont regroupées dans un seul élément (questions séparées par « / ») auquel tu réponds une fois, avec son transmission_id. Registre complet : ${cheminTravail('registre.json')}. Tes constats initiaux éventuels : ${cheminTravail(`constats/${dest}.json`)}.`,
       `MÉTHODE pour chaque transmission :
 - reviens aux pièces sources, pas seulement au résumé ;
 - réponds : confirme (tu apportes un élément INDÉPENDANT qui va dans le même sens), refute (tu apportes un élément qui contredit le constat), nuance (constat partiellement juste : précise), non_resolu (les pièces ne permettent pas de trancher : dis ce qui manque) ;
