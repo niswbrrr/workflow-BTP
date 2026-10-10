@@ -140,7 +140,17 @@ Défauts révélés par ce passage et corrigés ensuite (validés par simulation
 
 Un exemple de livrables produits par cet essai figure dans `docs/exemple_livrables/` (projet fictif).
 
-### 4.5 Ce qui n'a pas été éprouvé avec de vrais agents
+### 4.5 Installation en plugin depuis GitHub (coût ≈ 0,16 $)
+
+`claude plugin validate . --strict` : manifestes du plugin et de la marketplace valides, sans
+avertissement. Puis, comme depuis l'onglet Plugins :
+`claude plugin marketplace add niswbrrr/workflow-BTP#claude/admiring-keller-43am29` et
+`claude plugin install btp@workflow-btp` : plugin cloné dans
+`~/.claude/plugins/cache/workflow-btp/btp/1.0.0/`. Installation personnelle écartée, depuis un
+projet vide : `/btp:audit-dossier-btp /tmp/dossier_qui_n_existe_pas mode=rapide` → workflow
+`btp:audit-dossier-btp` lancé, outils trouvés seuls dans le dossier du plugin, arrêt propre en phase 0.
+
+### 4.6 Ce qui n'a pas été éprouvé avec de vrais agents
 
 - modes standard et approfondi (OPC, références, complétude, revue qualité, second tour d'échanges,
   arbitrage) : éprouvés uniquement en simulation ;

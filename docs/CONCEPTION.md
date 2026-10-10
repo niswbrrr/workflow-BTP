@@ -18,7 +18,7 @@ Pour l'installer et le lancer, voir le [README](../README.md).
 | Script | Aucun accès fichier ni réseau : **seuls les agents** lisent, écrivent et exécutent. |
 | Sous-agents | Type `workflow-subagent`, tous les outils sauf Agent et Workflow : ils peuvent lancer Python, lire et écrire. |
 | Concurrence | min(16, CPU − 2) agents simultanés ; 1 000 agents au plus par exécution. |
-| Enregistrement | Fichier `.js` dans `~/.claude/workflows/` (personnel, ou `$CLAUDE_CONFIG_DIR/workflows/`) ou `.claude/workflows/` (projet). Le nom de la commande est `meta.name`. |
+| Enregistrement | Fichier `.js` dans `~/.claude/workflows/` (personnel, ou `$CLAUDE_CONFIG_DIR/workflows/`), `.claude/workflows/` (projet) ou fourni par un plugin (champ `workflows` du manifeste). Le nom de la commande est `meta.name`, préfixé du nom du plugin le cas échéant (`/btp:audit-dossier-btp`). Le script d'un workflow de plugin n'est pas réécrit : il retrouve ses outils en cherchant dans `~/.claude/plugins/`. |
 | Invocation | `/audit-dossier-btp <texte>` : le texte arrive **tel quel, en chaîne** dans `args` (vérifié sur le moteur réel). |
 | Activation | Réglage « Dynamic workflows » (`/config`) ou `"enableWorkflows": true` ; peut être interdit par l'organisation. |
 | Communication entre agents | **Aucune primitive de messagerie entre agents.** Un agent ne peut ni appeler ni interroger un autre agent. |
