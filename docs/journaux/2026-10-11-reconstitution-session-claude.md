@@ -27,7 +27,7 @@ résultat à juger).
 | Environnement | Conteneur Linux Ubuntu 24.04.5, 4 cœurs, Claude Code 2.1.296, Python 3.13, Node 22 (relevés pendant la reconstitution) |
 | Acteurs | L'utilisateur (3 messages et 1 réponse à une question) ; Claude (session principale) ; 6 sessions Claude Code imbriquées (`claude -p`) lancées par Claude pour les essais ; les agents des workflows lancés par ces sessions |
 | Événements recensés | 361 dans la période (128 appels d'outils, 127 résultats, 1 décision de l'utilisateur, 46 réponses de Claude, 3 messages de l'utilisateur, 45 notifications, 6 signalements de fichier modifié, 5 hooks) |
-| Document établi | Le 2026-10-11, entre 00:08 et environ 00:40 UTC, par Claude, dans la même session |
+| Document établi | Le 2026-10-11, entre 00:08 et 00:28 UTC, par Claude, dans la même session |
 
 ### Sources utilisées
 

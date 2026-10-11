@@ -1,6 +1,6 @@
 # État du projet `workflow-BTP`
 
-État constaté le **2026-10-11 vers 00:40 UTC**, sur le commit `c9311af` de `main`. Ce document
+État constaté le **2026-10-11 vers 00:28 UTC**, sur le commit `c9311af` de `main`. Ce document
 distingue ce qui est **vérifié** (avec la nature de la vérification) de ce qui est seulement
 **conçu ou prévu**. Une fonctionnalité discutée ou demandée n'est jamais présentée comme
 opérationnelle sans preuve. Historique détaillé de la dernière heure de travail :
