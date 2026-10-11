@@ -166,3 +166,11 @@ install.py                               installation personnelle
 docs/                                    conception et résultats des essais
 tests/                                   dossier d'essai, scénario simulé, validateur, runtime simulé
 ```
+
+## État du projet et journal de session
+
+- [docs/ETAT_PROJET.md](docs/ETAT_PROJET.md) : ce qui est vérifié (réel, simulé, unitaire), ce qui
+  ne l'est pas encore, les dépendances, les problèmes ouverts et les prochaines étapes.
+- [docs/journaux/2026-10-11-reconstitution-session-claude.md](docs/journaux/2026-10-11-reconstitution-session-claude.md) :
+  reconstitution chronologique et sourcée de la session de travail de Claude Code du 10-11 octobre
+  2026 (23:08 → 00:08 UTC), avec la transcription complète en annexe.
